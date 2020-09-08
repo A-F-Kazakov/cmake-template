@@ -1,2 +1,2 @@
-# cmake-project
+# cmake-template
 Cmake minimal project

@@ -1,38 +1,7 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.13)
 
-project(Template VERSION 0.0.1)
+project(Template)
 
-string(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
-string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
-
-set(${PROJECT_NAME_UPPER}_VERSION ${PROJECT_VERSION})
-set(${PROJECT_NAME_UPPER}_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
-set(${PROJECT_NAME_UPPER}_VERSION_MINOR ${PROJECT_VERSION_MINOR})
-set(${PROJECT_NAME_UPPER}_VERSION_PATCH ${PROJECT_VERSION_PATCH})
-
-message(STATUS "${PROJECT_NAME} version: ${${PROJECT_NAME_UPPER}_VERSION_MAJOR}.${${PROJECT_NAME_UPPER}_VERSION_MINOR}.${${PROJECT_NAME_UPPER}_VERSION_PATCH}")
-
-set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-option(${PROJECT_NAME_UPPER}_BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
-option(${PROJECT_NAME_UPPER}_BUILD_TESTS "Build ${PROJECT_NAME} tests" OFF)
-option(${PROJECT_NAME_UPPER}_BUILD_EXAMPLES "Build ${PROJECT_NAME} examples" OFF)
-
-if(${BUILD_SHARED_LIBS})
-	set(${PROJECT_NAME_UPPER}_BUILD_SHARED_LIBS ON)
-	message(STATUS "Globally enabled building shared libs")
-endif()
-
-add_subdirectory(src)
-
-get_directory_property(HAS_PARENT PARENT_DIRECTORY)
-
-if(NOT HAS_PARENT)
-	if(${PROJECT_NAME_UPPER}_BUILD_TESTS)
-		add_subdirectory(tests)
-	endif()
-	if(${PROJECT_NAME_UPPER}_BUILD_EXAMPLES)
-		add_subdirectory(examples)
-	endif()
-endif()
+add_subdirectory(lib)
