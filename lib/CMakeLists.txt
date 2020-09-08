@@ -38,3 +38,5 @@ endif()
 if(${PROJECT_NAME_UPPER}_BUILD_EXAMPLES)
 	add_subdirectory(examples)
 endif()
+
+add_library(${CMAKE_PROJECT_NAME}::lib ALIAS ${PROJECT_NAME})
