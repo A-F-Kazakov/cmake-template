@@ -1,12 +1,12 @@
-#include<Template/example.hpp>
+#include<tmpl/example.hpp>
 
 #include<iostream>
 
-using std::cout;
+using LIB_NAMESPACE::example;
 
 int main()
 {
 	example vl("Hello example");
 
-	cout << vl;
+	std::cout << vl;
 }
