@@ -1,0 +1,57 @@
+name: Build
+
+on: push
+
+jobs:
+   build:
+      name: ${{ matrix.name }}
+      runs-on: ${{ matrix.cfg.os }}
+      strategy:
+         matrix:
+           cfg:
+            -
+               name: MacOS
+               os: macos-latest
+               flags: -- -j2
+            -
+               name: Windows
+               os: windows-latest
+               flags: ''
+            -
+               name: Linux
+               os: ubuntu-latest
+               flags: -- -j2
+
+      steps:
+        - uses: actions/checkout@v2
+        -
+          name: Cache catch2
+          id: catch2
+          uses: actions/cache@v2
+          with:
+            path: deps
+            key: ${{ runner.os }}-deps
+        -
+          name: Setup Catch2
+          if: steps.catch2.outputs.cache-hit != 'true'
+          run: |
+            git clone https://github.com/catchorg/Catch2.git
+            pushd Catch2 && git checkout tags/v2.13.5 && popd
+            cmake -S Catch2 -B catch_build -DCATCH_BUILD_TESTING=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_EXTRAS=OFF -DCMAKE_INSTALL_PREFIX=deps
+            cmake --build catch_build --config Release ${{ matrix.cfg.flags }}
+            cmake --install catch_build
+        -
+          name: Configure
+          env:
+            CMAKE_PREFIX_PATH: deps
+          run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTMPL_LIB_BUILD_SHARED=ON -DTMPL_LIB_BUILD_TESTS=ON -DTMPL_LIB_BUILD_EXAMPLES=ON
+        -
+          name: Tests
+          run: cmake --build build --config Release --target lib_test_first ${{ matrix.cfg.flags }}
+        -
+          name: Build lib
+          run: cmake --build build --config Release --target lib ${{ matrix.cfg.flags }}
+        -
+          name: Build app
+          run: cmake --build build --config Release --target app ${{ matrix.cfg.flags }}
+
