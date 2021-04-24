@@ -1,0 +1,38 @@
+name: Documentation
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{github.repository}}.wiki
+          path: wiki
+      -
+        name: Prepare
+        run: sudo apt-get -y update && sudo apt-get -y install doxygen graphviz
+      -
+        name: Generate
+        run: doxygen Doxyfile
+      -
+        name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v2
+      -
+        name: Install NPM modules
+        run: sudo npm install moxygen -g
+      -
+        name: Convert
+        run: moxygen --output wiki/api-%s.md doc/xml
+      -
+        name: Commit files
+        working-directory: wiki
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Add changes"
+          git push
+
