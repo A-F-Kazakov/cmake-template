@@ -1,3 +1,10 @@
+/**
+ * \file
+ * \brief main application file
+ *
+ * This file contains main function of application
+ */
+
 #include <tmpl/example.hpp>
 
 #include<iostream>
