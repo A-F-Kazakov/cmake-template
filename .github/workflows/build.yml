@@ -25,21 +25,16 @@ jobs:
       steps:
         - uses: actions/checkout@v2
         -
-          name: Cache catch2
-          id: catch2
+          name: Cache
+          id: deps
           uses: actions/cache@v2
           with:
-            path: deps
-            key: ${{ runner.os }}-deps
+            path: $VCPKG_INSTALLATION_ROOT/install
+            key: ${{ matrix.cfg.name }}-deps
         -
-          name: Setup Catch2
-          if: steps.catch2.outputs.cache-hit != 'true'
-          run: |
-            git clone https://github.com/catchorg/Catch2.git
-            pushd Catch2 && git checkout tags/v2.13.5 && popd
-            cmake -S Catch2 -B catch_build -DCATCH_BUILD_TESTING=OFF -DCATCH_INSTALL_DOCS=OFF -DCATCH_INSTALL_EXTRAS=OFF -DCMAKE_INSTALL_PREFIX=deps
-            cmake --build catch_build --config Release ${{ matrix.cfg.flags }}
-            cmake --install catch_build
+          name: Setup dependencies
+          if: steps.deps.outputs.cache-hit != 'true'
+          run: vcpkg install catch2
         -
           name: Configure
           env:
