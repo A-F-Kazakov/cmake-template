@@ -23,7 +23,7 @@ jobs:
       - name: copy
         run: |
           ls -la ${{ github.workspace }}/out
-          cp ${{ github.workspace }}/out/doc_example.md ${{ github.workspace }}/wiki/example.md
+          #cp ${{ github.workspace }}/out/doc_example.md ${{ github.workspace }}/wiki/example.md
       - name: Commit files
         working-directory: wiki
         run: |
