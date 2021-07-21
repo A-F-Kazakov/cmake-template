@@ -12,7 +12,9 @@ jobs:
           repository: ${{github.repository}}.wiki
           path: wiki
       - name: prep
-        run: mkdir -p ${{ github.workspace }}/out
+        run: |
+          mkdir -p ${{ github.workspace }}/out
+          ls -la ${{ github.workspace }}
       - uses: addnab/docker-run-action@v3
         with:
           image: standardese/standardese
