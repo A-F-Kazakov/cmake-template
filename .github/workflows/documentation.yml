@@ -12,7 +12,7 @@ jobs:
           repository: ${{github.repository}}.wiki
           path: wiki
       - name: prep
-        run: mkdir out
+        run: mkdir -p ${{ github.workspace }}/out
       - uses: addnab/docker-run-action@v3
         with:
           image: standardese/standardese
@@ -20,8 +20,8 @@ jobs:
           run: standardese /headers --compilation.standard=c++17
       - name: copy
         run: |
-          ls -la out
-          cp out/doc_example.md wiki/example.hpp
+          ls -la ${{ github.workspace }}/out
+          cp ${{ github.workspace }}/out/doc_example.md ${{ github.workspace }}/wiki/example.md
       - name: Commit files
         working-directory: wiki
         run: |
