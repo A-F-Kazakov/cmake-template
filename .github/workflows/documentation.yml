@@ -18,10 +18,7 @@ jobs:
       - uses: addnab/docker-run-action@v3
         with:
           image: standardese/standardese
-          options: |
-            -v lib/include/tmpl:/headers:ro
-            -v build/lib:/includes:ro
-            -v out:/home/standardese
+          options: -v lib/include/tmpl:/headers:ro -v build/lib:/includes:ro -v out:/home/standardese
           run: standardese /headers -I /includes --compilation.standard=c++17
       - name: copy
         run: |
