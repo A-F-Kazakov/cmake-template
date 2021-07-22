@@ -7,27 +7,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: configure
+        run: cmake -S . -B build
       - uses: actions/checkout@v2
         with:
-          repository: ${{github.repository}}.wiki
+          repository: ${{ github.repository }}.wiki
           path: wiki
-      -
-        name: Prepare
-        run: sudo apt-get -y update && sudo apt-get -y install doxygen graphviz
-      -
-        name: Generate
-        run: doxygen Doxyfile
-      -
-        name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v2
-      -
-        name: Install NPM modules
-        run: sudo npm install moxygen -g
-      -
-        name: Convert
-        run: moxygen --output wiki/api-%s.md doc/xml
-      -
-        name: Commit files
+      - name: prep
+        run: mkdir -m=777 -p out
+      - uses: addnab/docker-run-action@v3
+        with:
+          image: standardese/standardese
+          options: 
+            -v ${{ github.workspace }}/lib/include/tmpl:/headers:ro
+            -v ${{ github.workspace }}/build/lib:/includes:ro
+            -v ${{ github.workspace }}/out:/home/standardese
+          run: standardese /headers -I /includes --compilation.standard=c++17
+      - name: copy
+        run: |
+          cp out/doc_example.md wiki/example.md
+      - name: Commit files
         working-directory: wiki
         run: |
           git config --local user.email "action@github.com"

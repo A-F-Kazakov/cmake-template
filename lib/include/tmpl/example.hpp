@@ -1,10 +1,3 @@
-/**
- * \file
- * \brief example interface
- *
- *	This file contains interface for example class
- */
-
 #ifndef TMPL_LIB_EXAMPLE_HPP
 #define TMPL_LIB_EXAMPLE_HPP
 
@@ -12,34 +5,43 @@
 #include <string>
 #include <ostream>
 
-/**
- * \brief class interface for example purpose
- * \version v1
- * \warning This is an example
- */
-
 namespace LIB_NAMESPACE
 {
+	 /**
+	  * \brief meaningless writer object
+	  *
+	  * This is more complex and exaustive description of this class
+	  */
 	struct example
 	{
+		/**
+		 * \effects Creates the default example object
+		 */
 		example();
-		example(std::string);
 
 		/**
-		 *
-		 * copy inner data to ostream
-		 * \param [out] os output stream
-		 * \param [in] exmpl instance of a class
-		 *
-		 * \return same output stream
-		*/
+		 * \effects creates example instance with specified string
+		 */
+		example(std::string);
+
 		friend std::ostream& operator<<(std::ostream&, const example&);
 
 		private:
 			std::string data;
 	};
 
-	std::ostream& operator<<(std::ostream&, const example&);
+		/**
+		 * \brief example stream operator
+		 *
+		 * prints underlying data to specific stream
+		 *
+		 * \param os specific output stream
+		 *
+		 * \param exmpl instance of the example
+		 *
+		 * \returns same output stream
+		*/
+	std::ostream& operator<<(std::ostream& os, const example& exmpl);
 }
 
 #endif
