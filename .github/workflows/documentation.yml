@@ -7,21 +7,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: configure
+        run: cmake -S . -B build
       - uses: actions/checkout@v2
         with:
           repository: ${{github.repository}}.wiki
           path: wiki
       - name: prep
-        run: mkdir -p ${{ github.workspace }}/out && chmod a+w -R out
+        run: mkdir -m=777 -p out
       - uses: addnab/docker-run-action@v3
         with:
           image: standardese/standardese
-          options: -v ${{ github.workspace }}/lib/include/tmpl:/headers:ro -v ${{ github.workspace }}/out:/home/standardese
-          run: standardese /headers --compilation.standard=c++17
+          options: |
+            -v lib/include/tmpl:/headers:ro
+            -v build/lib:/includes:ro
+            -v out:/home/standardese
+          run: standardese /headers -I /includes --compilation.standard=c++17
       - name: copy
         run: |
-          ls -la ${{ github.workspace }}/out
-          cp ${{ github.workspace }}/out/doc_example.md ${{ github.workspace }}/wiki/example.md
+          cp out/doc_example.md wiki/example.md
       - name: Commit files
         working-directory: wiki
         run: |

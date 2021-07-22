@@ -1,7 +1,7 @@
 #ifndef TMPL_LIB_EXAMPLE_HPP
 #define TMPL_LIB_EXAMPLE_HPP
 
-#include "config.hpp"
+#include <config.hpp>
 #include <string>
 #include <ostream>
 
