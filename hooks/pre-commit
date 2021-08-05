@@ -1,0 +1,28 @@
+#! /bin/bash
+
+set -e
+
+FILES=$(git diff --name-only --cached)
+SOURCES=""
+
+for file in $FILES; do
+	if [[ $file == *.cpp ]] ||  [[ $file == *.hpp ]]; then
+		SOURCES="$SOURCES $file"
+	fi
+done
+
+# format modified files
+if [[ ! -z $SOURCES ]]; then
+	clang-format -style=file -i $SOURCES
+	git add $SOURCES
+fi
+
+GIT_DESCRIBE=$(git describe | cut -d- -f1,2 --output-delimiter=.)
+GIT_DESCRIBE=${GIT_DESCRIBE:1}
+
+if [[ ! -z $GIT_DESCRIBE ]]; then
+	sed -i "s/\(project \?(\w\+ VERSION \)[0-9]\+.[0-9]\+.[0-9]\+.\?[0-9]*\(.*\))/\1$GIT_DESCRIBE\2)/g" CMakeLists.txt
+
+	git add CMakeLists.txt
+fi
+
