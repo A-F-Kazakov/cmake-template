@@ -1,5 +1,6 @@
 ---
-Checks:          '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trailing-return-type,-llvm*'
+Checks:
+'-*,readability-braces-around-statements-*,concurrency-*,cppcoreguidelines-*,hicpp-*,modernize-*,performance-*,portability-*,readability-*,-modernize-use-trailing-return-type,-hicpp-braces-around-statements,-readability-braces-around-statements'
 WarningsAsErrors: '*'
 HeaderFilterRegex: ''
 FormatStyle:     none
