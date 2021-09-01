@@ -1,6 +1,7 @@
 #ifndef TMPL_LIB_EXAMPLE_HPP
 #define TMPL_LIB_EXAMPLE_HPP
 
+#include <lib_export.h>
 #include <config.hpp>
 #include <string>
 #include <ostream>
@@ -12,7 +13,7 @@ namespace LIB_NAMESPACE
 	  *
 	  * This is more complex and exaustive description of this class
 	  */
-	struct example
+	struct LIB_EXPORT example
 	{
 		/**
 		 * \effects Creates the default example object
@@ -41,7 +42,7 @@ namespace LIB_NAMESPACE
 		 *
 		 * \returns same output stream
 		*/
-	std::ostream& operator<<(std::ostream& os, const example& exmpl);
+	std::ostream& LIB_EXPORT operator<<(std::ostream& os, const example& exmpl);
 }
 
 #endif
