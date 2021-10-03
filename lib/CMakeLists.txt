@@ -3,8 +3,6 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN TRUE)
 
 include(GenerateExportHeader)
 
-include(GenerateExportHeader)
-
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
@@ -50,11 +48,11 @@ set_target_properties(${PROJECT_NAME}
 
 generate_export_header(${PROJECT_NAME})
 
-if(${FULL_PROJECT_NAME_UPPER}_BUILD_TESTS)
+if(${${FULL_PROJECT_NAME_UPPER}_BUILD_TESTS})
 	add_subdirectory(tests)
 endif()
 
-if(${FULL_PROJECT_NAME_UPPER}_BUILD_EXAMPLES)
+if(${${FULL_PROJECT_NAME_UPPER}_BUILD_EXAMPLES})
 	add_subdirectory(examples)
 endif()
 

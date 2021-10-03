@@ -3,50 +3,92 @@ name: Build
 on: push
 
 jobs:
-   build:
-      name: ${{ matrix.name }}
-      runs-on: ${{ matrix.cfg.os }}
-      strategy:
-         matrix:
-           cfg:
-            -
-               name: MacOS
-               os: macos-latest
-               flags: -- -j2
-            -
-               name: Windows
-               os: windows-latest
-               flags: ''
-            -
-               name: Linux
-               os: ubuntu-latest
-               flags: -- -j2
+  build:
+    name: ${{ matrix.cfg.name }}
+    runs-on: ${{ matrix.cfg.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        cfg:
+        -
+          name: MacOS
+          os: macos-latest
+        -
+          name: Windows
+          os: windows-latest
+        -
+          name: Linux
+          os: ubuntu-latest
 
-      steps:
-        - uses: actions/checkout@v2
-        -
-          name: Cache
-          id: deps
-          uses: actions/cache@v2
-          with:
-            path: $VCPKG_INSTALLATION_ROOT/install
-            key: ${{ matrix.cfg.name }}-deps
-        -
-          name: Setup dependencies
-          if: steps.deps.outputs.cache-hit != 'true'
-          run: vcpkg install catch2
-        -
-          name: Configure
-          env:
-            CMAKE_PREFIX_PATH: deps
-          run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTMPL_LIB_BUILD_SHARED=ON -DTMPL_LIB_BUILD_TESTS=ON -DTMPL_LIB_BUILD_EXAMPLES=ON
-        -
-          name: Tests
-          run: cmake --build build --config Release --target lib_test_first ${{ matrix.cfg.flags }}
-        -
-          name: Build lib
-          run: cmake --build build --config Release --target lib ${{ matrix.cfg.flags }}
-        -
-          name: Build app
-          run: cmake --build build --config Release --target app ${{ matrix.cfg.flags }}
+    steps:
+      - uses: actions/checkout@v2
+      -
+        name: Cache
+        id: deps
+        uses: actions/cache@v2
+        with:
+          path: $VCPKG_INSTALLATION_ROOT/install
+          key: ${{ matrix.cfg.name }}-deps
+      -
+        name: Setup dependencies
+        if: steps.deps.outputs.cache-hit != 'true'
+        run: vcpkg install catch2
+      -
+        name: Configure for tests
+        shell: bash
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=deps -DTMPL_LIB_BUILD_TESTS=ON
+      -
+        name: Tests
+        run: cmake --build build --config Debug --target lib_tests
+      -
+        name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTMPL_LIB_BUILD_SHARED=ON -DTMPL_LIB_BUILD_TESTS=OFF
+      -
+        name: Build lib
+        run: cmake --build build --config Release --target lib -j2
+      -
+        name: Build app
+        run: cmake --build build --config Release --target app -j2
+      -
+        name: Pack
+        run: cmake --build build --config Release --target Tmpl-pack
+      -
+        name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          path: build/
+          name: ${{ matrix.cfg.name }}-artefact
 
+  release:
+    name: Create release
+    if: contains(github.ref, 'tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      release_url: ${{ steps.release.outputs.upload_url }}
+    steps:
+      -
+        name: Release
+        id: release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+  publish:
+    name: Deploy artefacts
+    if: contains(github.ref, 'tags/v')
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+      -
+        name: Upload to Release
+        uses: actions/upload-release-asset@v1.0.1
+        with:
+          upload_url: ${{ needs.release.outputs.release_url }}
+          asset_path: ./*.zip
+          asset_name: some
+          asset_content_type: application/zip

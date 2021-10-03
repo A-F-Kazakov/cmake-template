@@ -24,7 +24,7 @@ namespace LIB_NAMESPACE
 		 */
 		example(std::string);
 
-		friend std::ostream& operator<<(std::ostream&, const example&);
+		friend TMPL_EXPORT std::ostream& operator<<(std::ostream&, const example&);
 
 	  private:
 		std::string data;
