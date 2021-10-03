@@ -7,22 +7,27 @@ SOURCES=""
 
 for file in $FILES; do
 	if [[ $file == *.cpp ]] ||  [[ $file == *.hpp ]]; then
-		SOURCES="$SOURCES $file"
+		if [[ -f $file ]]; then
+			SOURCES="$SOURCES $file"
+		fi
 	fi
 done
 
-# format modified files
-if [[ ! -z $SOURCES ]]; then
-	clang-format -style=file -i $SOURCES
-	git add $SOURCES
+if [[ -f .clang-format ]]; then
+	if [[ ! -z $SOURCES ]]; then
+		clang-format -style=file -i $SOURCES
+		git add $SOURCES
+	fi
 fi
 
 GIT_DESCRIBE=$(git describe | cut -d- -f1,2 --output-delimiter=.)
 GIT_DESCRIBE=${GIT_DESCRIBE:1}
 
-if [[ ! -z $GIT_DESCRIBE ]]; then
-	sed -i "s/\(project \?(\w\+ VERSION \)[0-9]\+.[0-9]\+.[0-9]\+.\?[0-9]*\(.*\))/\1$GIT_DESCRIBE\2)/g" CMakeLists.txt
+if [[ -f CMakeLists.txt ]]; then
+	if [[ ! -z $GIT_DESCRIBE ]]; then
+		sed -i "s/\(project \?(\w\+ VERSION \)[0-9]\+.[0-9]\+.[0-9]\+.\?[0-9]* \(.*\))/\1$GIT_DESCRIBE \2)/g" CMakeLists.txt
 
-	git add CMakeLists.txt
+		git add CMakeLists.txt
+	fi
 fi
 
