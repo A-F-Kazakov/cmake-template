@@ -49,7 +49,7 @@ jobs:
         run: cmake --build build --config Release --target app -j2
       -
         name: Pack
-        run: cmake --install build --config Release --target package -j2
+        run: cmake --build build --config Release --target package -j2
       -
         name: Upload
         uses: actions/upload-artifact@v1
