@@ -33,13 +33,13 @@ jobs:
           key: ${{ matrix.cfg.name }}-build
       -
         name: Configure for tests
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DTMPL_LIB_BUILD_SHARED=OFF -DTMPL_LIB_BUILD_TESTS=ON
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DTMPL_LIB_BUILD_SHARED=OFF -DTMPL_LIB_BUILD_TESTS=ON
       -
         name: Tests
-        run: cmake --build build --config Debug --target run_tests -j2
+        run: cmake --build build --config Debug --target test -j2
       -
         name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTMPL_LIB_BUILD_SHARED=ON -DTMPL_LIB_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=install
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DTMPL_LIB_BUILD_SHARED=ON -DTMPL_LIB_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=install
       -
         name: Build lib
         run: cmake --build build --config Release --target lib -j2
@@ -48,7 +48,7 @@ jobs:
         run: cmake --build build --config Release --target app -j2
       -
         name: Pack
-        run: cmake --install build --config Release --targe package -j2
+        run: cmake --install build --config Release --target package -j2
       -
         name: Upload
         uses: actions/upload-artifact@v1
