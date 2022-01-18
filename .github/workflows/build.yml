@@ -30,16 +30,17 @@ jobs:
         uses: actions/cache@v2
         with:
           path: build
-          key: ${{ matrix.cfg.name }}-build-v2
+          key: ${{ matrix.cfg.name }}-build
       -
         name: Configure for tests
-        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DTMPL_LIB_BUILD_SHARED=OFF -DTMPL_LIB_BUILD_TESTS=ON
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DTMPL_LIB_BUILD_SHARED=OFF -DTMPL_LIB_BUILD_TESTS=ON
       -
-        name: Tests
-        run: cmake --build build --config Debug --target test -j2
+        name: Tests 
+        working_directory: build
+        run: ctest -C Debug -j2
       -
         name: Configure
-        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DTMPL_LIB_BUILD_SHARED=ON -DTMPL_LIB_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=install
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTMPL_LIB_BUILD_SHARED=ON -DTMPL_LIB_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=install
       -
         name: Build lib
         run: cmake --build build --config Release --target lib -j2
