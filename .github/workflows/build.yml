@@ -27,20 +27,19 @@ jobs:
       - uses: actions/checkout@v2
       -
         name: Cache
-        id: build
         uses: actions/cache@v2
         with:
           path: build
           key: ${{ matrix.cfg.name }}-build
       -
         name: Configure for tests
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DTMPL_LIB_BUILD_TESTS=ON
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DTMPL_LIB_BUILD_SHARED=OFF -DTMPL_LIB_BUILD_TESTS=ON
       -
         name: Tests
-        run: cmake --build build --config Debug --target lib_tests
+        run: cmake --build build --config Debug --target run_tests -j2
       -
         name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=install -DTMPL_LIB_BUILD_SHARED=ON -DTMPL_LIB_BUILD_TESTS=OFF
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTMPL_LIB_BUILD_SHARED=ON -DTMPL_LIB_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=install
       -
         name: Build lib
         run: cmake --build build --config Release --target lib -j2
@@ -49,36 +48,18 @@ jobs:
         run: cmake --build build --config Release --target app -j2
       -
         name: Pack
-        run: cmake --install build --config Release
+        run: cmake --install build --config Release --targe package -j2
       -
         name: Upload
         uses: actions/upload-artifact@v1
         with:
-          path: install
+          path: build/*.zip
           name: ${{ matrix.cfg.name }}-artefact
-
-  release:
-    name: Create release
-    if: contains(github.ref, 'tags/v')
-    needs: build
-    runs-on: ubuntu-latest
-    outputs:
-      release_url: ${{ steps.release.outputs.upload_url }}
-    steps:
-      -
-        name: Release
-        id: release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
 
   publish:
     name: Deploy artefacts
-    if: contains(github.ref, 'tags/v')
-    needs: release
+    if: github.event_name == 'release'
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v2
@@ -86,7 +67,7 @@ jobs:
         name: Upload to Release
         uses: actions/upload-release-asset@v1.0.1
         with:
-          upload_url: ${{ needs.release.outputs.release_url }}
-          asset_path: ./*.zip
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: build/*.zip
           asset_name: some
           asset_content_type: application/zip
