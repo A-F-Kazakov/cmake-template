@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(lib VERSION ${PROJECT_VERSION} LANGUAGES RC CXX)
+project(lib VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 
 include(GenerateExportHeader)
 
