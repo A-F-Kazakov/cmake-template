@@ -24,6 +24,10 @@ namespace LIB_NAMESPACE
 		 */
 		example(std::string);
 
+#ifndef SOMELIB_NO_DEPRECATED
+		TMPL_DEPRECATED void func();
+#endif
+
 		friend TMPL_EXPORT std::ostream& operator<<(std::ostream&, const example&);
 
 	  private:
