@@ -2,22 +2,22 @@ name: Documentation
 
 on:
   release:
-    types: [created, edited]
+    types: [ created, edited ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: configure
+      -
+        name: Configure
         run: cmake -S . -B build
-      - uses: actions/checkout@v2
-        with:
-          repository: ${{ github.repository }}.wiki
-          path: wiki
-      - name: prep
+      -
+        name: Preparation
         run: mkdir -m=777 -p out
-      - uses: addnab/docker-run-action@v3
+      -
+        name: Generate
+        uses: addnab/docker-run-action@v3
         with:
           image: standardese/standardese
           options: 
@@ -25,14 +25,24 @@ jobs:
             -v ${{ github.workspace }}/build/lib:/includes:ro
             -v ${{ github.workspace }}/out:/home/standardese
           run: standardese /headers -I /includes --compilation.standard=c++17
-      - name: copy
+      - 
+        name: Sync
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}.wiki
+          path: wiki
+      -
+        name: Copy
         run: cp out/doc_example.md wiki/example.md
-      - name: Commit files
+      -
+        name: Commit files
         working-directory: wiki
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git commit -m "Add changes"
-          git push
+          if [[ `git status --porcelain` ]]; then
+            git commit -m "Add changes"
+            git push
+          fi
 

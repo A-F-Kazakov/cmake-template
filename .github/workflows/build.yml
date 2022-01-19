@@ -1,27 +1,19 @@
 name: Build
 
 on:
-  #push:
+  pull_request:
+    types: [ created ]
+    branches: [ master ]
   release:
-    types: [created, edited]
+    types: [ created, edited ]
 
 jobs:
   build:
-    name: ${{ matrix.cfg.name }}
-    runs-on: ${{ matrix.cfg.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        cfg:
-        -
-          name: MacOS
-          os: macos-latest
-        -
-          name: Windows
-          os: windows-latest
-        -
-          name: Linux
-          os: ubuntu-latest
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
 
     steps:
       - uses: actions/checkout@v2
@@ -30,20 +22,10 @@ jobs:
         uses: actions/cache@v2
         with:
           path: build
-          key: ${{ matrix.cfg.name }}-test
-      -
-        name: Configure for tests
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DTMPL_LIB_BUILD_SHARED=OFF -DTMPL_LIB_BUILD_TESTS=ON
-      -
-        name: Build
-        run: cmake --build build --config Debug -j2
-      -
-        name: Tests
-        working-directory: build
-        run: ctest -C Debug -j2
+          key: ${{ matrix.os }}-build
       -
         name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTMPL_LIB_BUILD_SHARED=ON -DTMPL_LIB_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=install
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTMPL_LIB_BUILD_SHARED=ON
       -
         name: Build lib
         run: cmake --build build --config Release --target lib -j2
@@ -54,24 +36,24 @@ jobs:
         name: Pack
         run: cmake --build build --config Release --target package -j2
       -
+        if: github.event_name == 'pull_request'
         name: Upload
         uses: actions/upload-artifact@main
         with:
           path: build/*.zip
           name: ${{ matrix.cfg.name }}-artefact
-
-  publish:
-    name: Deploy artefacts
-    if: github.event_name == 'release'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v2
       -
-        name: Upload to Release
+        if: github.event_name == 'release'
+        id: prepare
+        name: Get name
+        shell: bash
+        run: echo ::set-output name=artefact::$(ls _build/ | grep .zip)
+      -
+        if: github.event_name == 'release'
+        name: Deploy artefacts
         uses: actions/upload-release-asset@v1.0.1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: build/*.zip
-          asset_name: some
+          asset_path: build/${{ steps.prepare.outputs.artefact }}
+          asset_name: ${{ matrix.os }}-${{ steps.prepare.outputs.artefact }}
           asset_content_type: application/zip

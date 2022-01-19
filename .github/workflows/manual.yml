@@ -1,0 +1,38 @@
+name: Manual
+
+on:
+  workflow_dispatch:
+    inputs:
+      os:
+        description: Build OS
+        required: true
+        default: ubuntu-latest
+      target:
+        required: true
+        default: lib
+      revision:
+        required: false
+        default: ''
+      build_type:
+        required: false
+        default: 'Release'
+
+jobs:
+   build:
+      runs-on: ${{ github.event.inputs.os }}
+      steps:
+         - uses: actions/checkout@v2
+           with:
+             ref: ${{ github.event.inputs.revision }}
+         - 
+            name: Configure
+            run: cmake -S . -B build -D CMAKE_BUILD_TYPE=${{ github.event.inputs.build_type }}
+         -
+            name: Build
+            run: cmake --build build --config ${{ github.event.inputs.build_type }} --target ${{ github.event.inputs.target }} -j2
+         -
+            name: Upload
+            uses: actions/upload-artifact@main
+            with:
+               name: ${{ github.event.inputs.os }}-${{ github.event.inputs.target }}-${{ github.event.inputs.build_type }}
+               path: build/**/*${{ github.event.inputs.target }}*
