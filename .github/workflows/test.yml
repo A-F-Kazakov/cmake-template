@@ -36,6 +36,10 @@ jobs:
     steps:
       - uses: actions/download-artifact@v2
       -
+        run: ls -la
+      -
+        run: ls -la artefact
+      -
         name: Upload to Release
         uses: actions/upload-release-asset@v1.0.1
         with:
