@@ -46,6 +46,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: https://uploads.github.com/repos/A-F-Kazakov/cmake-template/releases/57466790/assets{?name,label}
-          asset_path: artefact/package.zip
+          asset_path: artefact/*.zip
           asset_name: ubuntu-something
           asset_content_type: application/zip
