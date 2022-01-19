@@ -6,7 +6,7 @@ on:
     types: [created, edited]
 
 jobs:
-  test:
+  build:
     name: ${{ matrix.cfg.name }}
     runs-on: ${{ matrix.cfg.os }}
     strategy:
