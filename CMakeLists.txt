@@ -1,12 +1,14 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.16)
 
-include(ProcessorCount)
+project(Tmpl VERSION 0.1.0 DESCRIPTION "Cmake template project")
 
-project(Tmpl VERSION 0.0.1 DESCRIPTION "Cmake template project")
+message(STATUS "Build type is: ${CMAKE_BUILD_TYPE}")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-message(STATUS "Build type is: ${CMAKE_BUILD_TYPE}")
+include(GNUInstallDirs)
+
+enable_testing()
 
 add_subdirectory(lib)
 add_subdirectory(app)
@@ -21,9 +23,3 @@ set(CPACK_PACKAGE_DESCRIPTION ${PROJECT_DESCRIPTION})
 set(CPACK_GENERATOR "ZIP")
 
 include(CPack)
-
-add_custom_target(${PROJECT_NAME}-pack
-	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-	COMMAND cpack -C $<CONFIGURATION> -j${N}
-	DEPENDS lib app
-)

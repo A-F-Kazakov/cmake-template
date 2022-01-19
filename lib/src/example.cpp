@@ -8,6 +8,10 @@ example::example() = default;
 
 example::example(string dta) : data(std::move(dta)){}
 
+#ifndef SOMELIB_NO_DEPRECATED
+void example::func() {}
+#endif
+
 ostream& LIB_NAMESPACE::operator<<(ostream &os, const example& ex)
 {
 	os << ex.data;
