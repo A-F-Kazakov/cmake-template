@@ -20,7 +20,7 @@ jobs:
         name: Pack
         run: |
           cmake --install build --config Release
-          zip install package.zip
+          zip -r package.zip install
       -
         name: Upload
         uses: actions/upload-artifact@main
