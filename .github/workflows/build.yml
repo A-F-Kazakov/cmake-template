@@ -54,7 +54,7 @@ jobs:
         name: Upload
         uses: actions/upload-artifact@v1
         with:
-          path: build/Tmpl-*.zip
+          path: 'build/Tmpl-*.zip'
           name: ${{ matrix.cfg.name }}-artefact
 
   publish:
