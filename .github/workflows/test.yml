@@ -1,9 +1,6 @@
-name: Build
+name: Test
 
-on:
-  push:
-  release:
-    types: [created, edited]
+on: push
 
 jobs:
   build:
@@ -22,7 +19,7 @@ jobs:
       -
         name: Pack
         run: |
-          cmake --install build --config Release -j2
+          cmake --install build --config Release
           zip install package.zip
       -
         name: Upload
