@@ -1,0 +1,48 @@
+name: Build
+
+on:
+  push:
+  release:
+    types: [created, edited]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      -
+        name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install
+      -
+        name: Build lib
+        run: cmake --build build --config Release --target lib -j2
+      -
+        name: Build app
+        run: cmake --build build --config Release --target app -j2
+      -
+        name: Pack
+        run: |
+          cmake --install build --config Release -j2
+          zip install package.zip
+      -
+        name: Upload
+        uses: actions/upload-artifact@main
+        with:
+          path: package.zip
+          name: artefact
+
+  publish:
+    name: Deploy artefacts
+      #if: github.event_name == 'release'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+      -
+        name: Upload to Release
+        uses: actions/upload-release-asset@v1.0.1
+        with:
+          upload_url: https://uploads.github.com/repos/A-F-Kazakov/cmake-template/releases/57466790/assets{?name,label}
+          asset_path: package.zip
+          asset_name: ubuntu-something
+          asset_content_type: application/zip
