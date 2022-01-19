@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Tmpl VERSION 0.0.1 DESCRIPTION "Cmake template project")
+project(Tmpl VERSION 0.1.0 DESCRIPTION "Cmake template project")
 
 message(STATUS "Build type is: ${CMAKE_BUILD_TYPE}")
 
