@@ -44,6 +44,6 @@ jobs:
         uses: actions/upload-release-asset@v1.0.1
         with:
           upload_url: https://uploads.github.com/repos/A-F-Kazakov/cmake-template/releases/57466790/assets{?name,label}
-          asset_path: package.zip
+          asset_path: artefact/package.zip
           asset_name: ubuntu-something
           asset_content_type: application/zip
