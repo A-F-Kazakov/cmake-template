@@ -1,0 +1,30 @@
+name: Test
+
+on: pull_request
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
+
+    steps:
+      - uses: actions/checkout@v2
+      -
+        name: Cache
+        uses: actions/cache@v2
+        with:
+          path: build
+          key: ${{ matrix.os }}-test
+      -
+        name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DTMPL_LIB_BUILD_SHARED=OFF -DTMPL_BUILD_TESTS=ON
+      -
+        name: Build
+        run: cmake --build build --config Debug -j2
+      -
+        name: Tests
+        working-directory: build
+        run: ctest -C Debug -j2

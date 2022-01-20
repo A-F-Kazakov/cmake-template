@@ -2,13 +2,19 @@ cmake_minimum_required(VERSION 3.16)
 
 project(Tmpl VERSION 0.1.0 DESCRIPTION "Cmake template project")
 
+string(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
+
+option(${PROJECT_NAME_UPPER}_BUILD_TESTS "Enable compilation of shared libraries" OFF)
+
 message(STATUS "Build type is: ${CMAKE_BUILD_TYPE}")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(GNUInstallDirs)
 
-enable_testing()
+if(${PROJECT_NAME_UPPER}_BUILD_TESTS)
+	enable_testing()
+endif()
 
 add_subdirectory(lib)
 add_subdirectory(app)
