@@ -47,7 +47,7 @@ jobs:
         id: prepare
         name: Get name
         shell: bash
-        run: echo ::set-output name=artefact::$(ls _build/ | grep .zip)
+        run: echo ::set-output name=artefact::$(ls build/ | grep .zip)
       -
         if: github.event_name == 'release'
         name: Deploy artefacts
