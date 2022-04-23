@@ -1,14 +1,36 @@
 name: Test
 
-on: pull_request
+on:
+  pull_request:
+    types: [ created, edited, synchronize ]
+    branches: [ master ]
+  release:
+    types: [ created, edited ]
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.cfg.name }}
+    runs-on: ${{ matrix.cfg.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, windows-latest, ubuntu-latest ]
+        cfg:
+          -
+            name: macos
+            os: macos-latest
+            flags: ''
+          -
+            name: windows-x64
+            os: windows-latest
+            flags: -DCMAKE_GENERATOR_PLATFORM=x64
+          -
+            name: windows-x32
+            os: windows-latest
+            flags: -DCMAKE_GENERATOR_PLATFORM=Win32
+          -
+            name: ubuntu
+            os: ubuntu-latest
+            flags: ''
 
     steps:
       - uses: actions/checkout@v2
@@ -17,14 +39,14 @@ jobs:
         uses: actions/cache@v2
         with:
           path: build
-          key: ${{ matrix.os }}-test
+          key: ${{ matrix.cfg.name }}-test
       -
         name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DTMPL_LIB_BUILD_SHARED=OFF -DTMPL_BUILD_TESTS=ON
+        run: cmake -S . -B build ${{ matrix.cfg.flags }} -DCMAKE_BUILD_TYPE=Debug -DTMPL_LIB_BUILD_SHARED=OFF -DTMPL_BUILD_TESTS=ON
       -
         name: Build
         run: cmake --build build --config Debug -j2
       -
         name: Tests
         working-directory: build
-        run: ctest -C Debug -j2
+        run: ctest -C Debug --output-on-failure -j2
