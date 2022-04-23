@@ -10,6 +10,7 @@ on:
 
 jobs:
   test:
+    name: ${{ matrix.cfg.name }}
     runs-on: ${{ matrix.cfg.os }}
     strategy:
       fail-fast: false
@@ -28,11 +29,15 @@ jobs:
             os: windows-latest
             flags: -DCMAKE_GENERATOR_PLATFORM=Win32
           -
-            name: ubuntu x86
-            os: ubuntu-latest
-            flags: -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
+            name: windows arm
+            os: windows-latest
+            flags: -DCMAKE_GENERATOR_PLATFORM=ARM
           -
-            name: ubuntu x64
+            name: windows arm64
+            os: windows-latest
+            flags: -DCMAKE_GENERATOR_PLATFORM=ARM64
+          -
+            name: ubuntu
             os: ubuntu-latest
             flags: ''
 
