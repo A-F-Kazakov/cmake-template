@@ -2,7 +2,7 @@ name: Test
 
 on:
   pull_request:
-    types: [ created, edited ]
+    types: [ created, edited, synchronize ]
     branches: [ master ]
   release:
     types: [ created, edited ]
