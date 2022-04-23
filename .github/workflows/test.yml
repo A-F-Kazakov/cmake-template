@@ -1,7 +1,6 @@
 name: Test
 
 on:
-  push:
   pull_request:
     types: [ created, edited ]
     branches: [ master ]
@@ -29,13 +28,9 @@ jobs:
             os: windows-latest
             flags: -DCMAKE_GENERATOR_PLATFORM=Win32
           -
-            name: ubuntu-x64
+            name: ubuntu
             os: ubuntu-latest
             flags: ''
-          -
-            name: ubuntu-x32
-            os: ubuntu-latest
-            flags: -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32
 
     steps:
       - uses: actions/checkout@v2
@@ -47,7 +42,7 @@ jobs:
           key: ${{ matrix.cfg.name }}-test
       -
         name: Configure
-        run: cmake ${{ matrix.cfg.flags }} -S . -B build -DCMAKE_BUILD_TYPE=Debug -DTMPL_LIB_BUILD_SHARED=OFF -DTMPL_BUILD_TESTS=ON
+        run: cmake -S . -B build ${{ matrix.cfg.flags }} -DCMAKE_BUILD_TYPE=Debug -DTMPL_LIB_BUILD_SHARED=OFF -DTMPL_BUILD_TESTS=ON
       -
         name: Build
         run: cmake --build build --config Debug -j2

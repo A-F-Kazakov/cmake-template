@@ -1,19 +1,44 @@
 name: Build
 
 on:
-  pull_request:
-    types: [ created ]
-    branches: [ master ]
-  release:
-    types: [ created, edited ]
+  workflow_run:
+    workflows: ["Test"]
+    types:
+      - completed
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    name: ${{ matrix.cfg.name }}
+    runs-on: ${{ matrix.cfg.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, windows-latest, ubuntu-latest ]
+        cfg:
+          -
+            name: macos
+            os: macos-latest
+            flags: ''
+          -
+            name: windows-x64
+            os: windows-latest
+            flags: -DCMAKE_GENERATOR_PLATFORM=x64
+          -
+            name: windows-x32
+            os: windows-latest
+            flags: -DCMAKE_GENERATOR_PLATFORM=Win32
+          -
+            name: windows-arm
+            os: windows-latest
+            flags: -DCMAKE_GENERATOR_PLATFORM=ARM
+          -
+            name: windows-arm64
+            os: windows-latest
+            flags: -DCMAKE_GENERATOR_PLATFORM=ARM64
+          -
+            name: ubuntu
+            os: ubuntu-latest
+            flags: ''
 
     steps:
       - uses: actions/checkout@v2
@@ -22,10 +47,10 @@ jobs:
         uses: actions/cache@v2
         with:
           path: build
-          key: ${{ matrix.os }}-build
+          key: ${{ matrix.cfg.name }}-build
       -
         name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTMPL_LIB_BUILD_SHARED=ON
+        run: cmake -S . -B build ${{ matrix.cfg.flags }} -DCMAKE_BUILD_TYPE=Release -DTMPL_LIB_BUILD_SHARED=ON
       -
         name: Build lib
         run: cmake --build build --config Release --target lib -j2
@@ -40,8 +65,8 @@ jobs:
         name: Upload
         uses: actions/upload-artifact@main
         with:
-          path: build/*.zip
           name: ${{ matrix.cfg.name }}-artefact
+          path: build/*.zip
       -
         if: github.event_name == 'release'
         id: prepare
@@ -55,5 +80,5 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: build/${{ steps.prepare.outputs.artefact }}
-          asset_name: ${{ matrix.os }}-${{ steps.prepare.outputs.artefact }}
+          asset_name: ${{ matrix.cfg.os }}-${{ steps.prepare.outputs.artefact }}
           asset_content_type: application/zip
