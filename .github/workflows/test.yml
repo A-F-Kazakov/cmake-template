@@ -29,17 +29,13 @@ jobs:
             os: windows-latest
             flags: -DCMAKE_GENERATOR_PLATFORM=Win32
           -
-            name: windows-arm
-            os: windows-latest
-            flags: -DCMAKE_GENERATOR_PLATFORM=ARM
-          -
-            name: windows-arm64
-            os: windows-latest
-            flags: -DCMAKE_GENERATOR_PLATFORM=ARM64
-          -
-            name: ubuntu
+            name: ubuntu-x64
             os: ubuntu-latest
             flags: ''
+          -
+            name: ubuntu-x32
+            os: ubuntu-latest
+            flags: -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32
 
     steps:
       - uses: actions/checkout@v2
@@ -58,4 +54,4 @@ jobs:
       -
         name: Tests
         working-directory: build
-        run: ctest -C Debug -j2
+        run: ctest -C Debug --output-on-failure -j2
