@@ -21,19 +21,19 @@ jobs:
             os: macos-latest
             flags: ''
           -
-            name: windows x64
+            name: windows-x64
             os: windows-latest
             flags: -DCMAKE_GENERATOR_PLATFORM=x64
           -
-            name: windows x32
+            name: windows-x32
             os: windows-latest
             flags: -DCMAKE_GENERATOR_PLATFORM=Win32
           -
-            name: windows arm
+            name: windows-arm
             os: windows-latest
             flags: -DCMAKE_GENERATOR_PLATFORM=ARM
           -
-            name: windows arm64
+            name: windows-arm64
             os: windows-latest
             flags: -DCMAKE_GENERATOR_PLATFORM=ARM64
           -
@@ -48,7 +48,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: build
-          key: ${{ matrix.cfg.os }}-test
+          key: ${{ matrix.cfg.name }}-test
       -
         name: Configure
         run: cmake ${{ matrix.cfg.flags }} -S . -B build -DCMAKE_BUILD_TYPE=Debug -DTMPL_LIB_BUILD_SHARED=OFF -DTMPL_BUILD_TESTS=ON
