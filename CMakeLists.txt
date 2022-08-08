@@ -9,6 +9,7 @@ option(${PROJECT_NAME_UPPER}_BUILD_TESTS "Enable compilation of shared libraries
 message(STATUS "Build type is: ${CMAKE_BUILD_TYPE}")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 include(GNUInstallDirs)
 
