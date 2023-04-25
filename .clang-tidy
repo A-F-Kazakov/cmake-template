@@ -1,7 +1,37 @@
 ---
-Checks:
-'-*,readability-braces-around-statements-*,concurrency-*,cppcoreguidelines-*,hicpp-*,modernize-*,performance-*,portability-*,readability-*,-modernize-use-trailing-return-type,-hicpp-braces-around-statements,-readability-braces-around-statements'
+Checks: '
+	-*,
+	bugprone-*,
+	concurrency-*,
+	cppcoreguidelines-*,
+	hicpp-*,
+	misc-*,
+	modernize-*,
+	performance-*,
+	portability-*,
+	readability-*,
+	-readability-braces-around-statements,
+	-modernize-use-trailing-return-type,
+	-hicpp-braces-around-statements,
+	-cppcoreguidelines-pro-bounds-pointer-arithmetic,
+	-cppcoreguidelines-owning-memory
+'
 WarningsAsErrors: '*'
 HeaderFilterRegex: ''
-FormatStyle:     none
+FormatStyle: 'file'
+CheckOptions:
+   - key:   readability-identifier-length.IgnoredVariableNames
+     value: "^[ijk]|io|ex$"
+   - key:   readability-identifier-length.IgnoredParameterNames
+     value: "^[th]|ec|io|os|ex$"
+   - key:   readability-identifier-length.IgnoredLoopCounterNames
+     value: "^[ijkxy]$"
+   - key:   readability-identifier-length.IgnoredExceptionVariableNames
+     value: "^[e]$"
+   - key:   readability-identifier-naming.PrivateMemberPrefix
+     value: 'm_'
+   - key:   readability-identifier-naming.TemplateParameterCase
+     value: 'CamelCase'
+   - key:   readability-identifier-naming.TemplateTemplateParameterPrefix
+     value: 'CamelCase'
 
