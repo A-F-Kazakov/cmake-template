@@ -1,11 +1,11 @@
 #ifndef TMPL_LIB_EXAMPLE_HPP
 #define TMPL_LIB_EXAMPLE_HPP
 
-#include <Tmpl.hpp>
+#include <tmpl/tmpl.hpp>
 #include <ostream>
 #include <string>
 
-namespace LIB_NAMESPACE
+namespace tmpl
 {
 	/**
 	 * \brief meaningless writer object
@@ -45,7 +45,7 @@ namespace LIB_NAMESPACE
 	 *
 	 * \returns same output stream
 	 */
-	TMPL_EXPORT std::ostream& operator<<(std::ostream& os, const example& exmpl);
+	TMPL_EXPORT std::ostream& operator<<(std::ostream&, const example&);
 } // namespace LIB_NAMESPACE
 
 #endif

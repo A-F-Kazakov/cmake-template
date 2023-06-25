@@ -1,6 +1,6 @@
 #include <tmpl/example.hpp>
 
-using LIB_NAMESPACE::example;
+using tmpl::example;
 using std::string;
 using std::ostream;
 
@@ -12,7 +12,7 @@ example::example(string dta) : data(std::move(dta)){}
 void example::func() {}
 #endif
 
-ostream& LIB_NAMESPACE::operator<<(ostream &os, const example& ex)
+ostream& tmpl::operator<<(ostream &os, const example& ex)
 {
 	os << ex.data;
 	return os;

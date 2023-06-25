@@ -1,0 +1,12 @@
+#ifndef TMPL_VERSION_HPP
+#define TMPL_VERSION_HPP
+
+namespace tmpl
+{
+	constexpr auto version = "@PROJECT_VERSION@";
+	constexpr auto version_major{@PROJECT_VERSION_MAJOR@};
+	constexpr auto version_minor{@PROJECT_VERSION_MINOR@};
+	constexpr auto version_patch{@PROJECT_VERSION_PATCH@};
+}
+
+#endif

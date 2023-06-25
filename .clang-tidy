@@ -34,4 +34,3 @@ CheckOptions:
      value: 'CamelCase'
    - key:   readability-identifier-naming.TemplateTemplateParameterPrefix
      value: 'CamelCase'
-

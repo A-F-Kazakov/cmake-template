@@ -1,12 +1,29 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(app VERSION 0.0.1 LANGUAGES CXX)
+project(${PROJECT_NAME}-app VERSION 0.0.1.0 LANGUAGES CXX)
+
+include(GNUInstallDirs)
+
+set(OUTPUT_NAME example_app)
+set(RC_PATH ${PROJECT_BINARY_DIR}/${OUTPUT_NAME}/${OUTPUT_NAME}.rc)
 
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE src/main.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_PROJECT_NAME}::lib)
-set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_RPATH @executable_path)
+target_link_libraries(${PROJECT_NAME} PRIVATE Tmpl::lib)
+set_target_properties(${PROJECT_NAME}
+	PROPERTIES
+		OUTPUT_NAME ${OUTPUT_NAME}
+		VERSION ${PROJECT_VERSION}
+		CXX_VISIBILITY_PRESET hidden
+		VISIBILITY_INLINES_HIDDEN ON
+)
+
+if(MSVC)
+	configure_file(${CMAKE_SOURCE_DIR}/rc.in ${RC_PATH})
+	target_sources(${PROJECT_NAME} PRIVATE ${RC_PATH})
+endif()
 
 install(TARGETS ${PROJECT_NAME}
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT ${PROJECT_NAME}_runtime
 	BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT ${PROJECT_NAME}_runtime
 )
+

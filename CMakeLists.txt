@@ -1,32 +1,25 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Tmpl VERSION 0.1.0 DESCRIPTION "Cmake template project")
+project(Tmpl)
 
-string(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
+option(TMPL_BUILD_TESTS "Build ${PROJECT_NAME} tests" OFF)
+option(TMPL_BUILD_EXAMPLES "Build ${PROJECT_NAME} examples" OFF)
+option(TMPL_EXCLUDE_DEPRECATED "Exclude deprecated parts of ${PROJECT_NAME}" OFF)
 
-option(${PROJECT_NAME_UPPER}_BUILD_TESTS "Enable compilation of shared libraries" OFF)
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+	set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Choose the type of build." FORCE)
+	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
 
 message(STATUS "Build type is: ${CMAKE_BUILD_TYPE}")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-include(GNUInstallDirs)
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-if(${PROJECT_NAME_UPPER}_BUILD_TESTS)
-	enable_testing()
-endif()
+enable_testing()
 
 add_subdirectory(lib)
 add_subdirectory(app)
 
-#
-
-set(CPACK_PACKAGE_VENDOR "VENDOR")
-set(CPACK_PACKAGE_CONTACT "https://tmpl.org")
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER "support@tmpl.org")
-set(CPACK_PACKAGE_DESCRIPTION ${PROJECT_DESCRIPTION})
-
-set(CPACK_GENERATOR "ZIP")
-
-include(CPack)
