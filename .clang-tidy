@@ -34,3 +34,11 @@ CheckOptions:
      value: 'CamelCase'
    - key:   readability-identifier-naming.TemplateTemplateParameterPrefix
      value: 'CamelCase'
+   - key:   readability-identifier-naming.GlobalConstantPrefix
+     value: 'default_'
+   - key:   readability-identifier-naming.GlobalConstantPointerPrefix
+     value: 'g_'
+   - key:   readability-identifier-naming.GlobalPointerPrefix
+     value: 'g_'
+   - key:   readability-identifier-naming.GlobalVariablePrefix
+     value: 'g_'
