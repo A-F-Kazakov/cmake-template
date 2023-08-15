@@ -7,9 +7,7 @@ AlignConsecutiveMacros: true
 AlignEscapedNewlines: Left
 AllowAllArgumentsOnNextLine: false
 AllowAllConstructorInitializersOnNextLine: false
-AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortBlocksOnASingleLine: false
-AllowShortEnumsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: All
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLambdasOnASingleLine: All
@@ -31,36 +29,20 @@ BraceWrapping:
  BeforeElse: true
  SplitEmptyFunction: false
  SplitEmptyRecord: false
-BreakBeforeConceptDeclarations: Always
 BreakConstructorInitializers: AfterColon
 BreakInheritanceList: AfterColon
 ColumnLimit: '130'
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 ConstructorInitializerIndentWidth: '3'
 Cpp11BracedListStyle: true
-EmptyLineBeforeAccessModifier: LogicalBlock
 FixNamespaceComments: true
-IndentAccessModifiers: true
-IndentCaseBlocks: true
-IndentWidth: '3'
 IncludeBlocks: Regroup
-IncludeCategories:
-  - Regex: '"[[:alnum:]./_]+"'
-    Priority: 1
-
-  - Regex: '<[[:alnum:]/_]+\.h|hpp>'
-    Priority: 2
-
-  - Regex: '<[:alnum:]+>'
-    Priority: 3
-
+IndentWidth: '3'
 KeepEmptyLinesAtTheStartOfBlocks: false
-LambdaBodyIndentation: Signature
 Language: Cpp
 MaxEmptyLinesToKeep: '1'
 NamespaceIndentation: All
 PointerAlignment: Left
-SortUsingDeclarations: true
 SpaceBeforeParens: Never
 Standard: Cpp11
 TabWidth: '3'

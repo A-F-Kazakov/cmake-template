@@ -4,34 +4,33 @@ Checks: '
 	bugprone-*,
 	concurrency-*,
 	cppcoreguidelines-*,
+	hicpp-*,
 	misc-*,
 	modernize-*,
 	performance-*,
 	portability-*,
 	readability-*,
-	-cppcoreguidelines-pro-bounds-pointer-arithmetic,
-   -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
-	-cppcoreguidelines-owning-memory,
+	-readability-braces-around-statements,
 	-modernize-use-trailing-return-type,
-	-readability-braces-around-statements
+	-hicpp-braces-around-statements,
+	-cppcoreguidelines-pro-bounds-pointer-arithmetic,
+	-cppcoreguidelines-owning-memory
 '
 WarningsAsErrors: '*'
 FormatStyle: 'file'
 CheckOptions:
    - key:   readability-identifier-length.IgnoredVariableNames
-     value: '^[ijk]|io|ex|fd$'
+     value: "^[ijk]|io|ex$"
    - key:   readability-identifier-length.IgnoredParameterNames
-     value: '^[th]|ec|io|os|ex|in$'
+     value: "^[th]|ec|io|os|ex$"
    - key:   readability-identifier-length.IgnoredLoopCounterNames
-     value: '^[ijkxy]$'
+     value: "^[ijkxy]$"
    - key:   readability-identifier-length.IgnoredExceptionVariableNames
-     value: '^[e]$'
+     value: "^[e]$"
    - key:   readability-identifier-naming.PrivateMemberPrefix
-     value: m_
+     value: 'm_'
    - key:   readability-identifier-naming.TemplateParameterCase
-     value: CamelCase
+     value: 'CamelCase'
    - key:   readability-identifier-naming.TemplateTemplateParameterPrefix
-     value: CamelCase
-   - key:   cppcoreguidelines-macro-usage.CheckCapsOnly
-     value: 'true'
+     value: 'CamelCase'
 
