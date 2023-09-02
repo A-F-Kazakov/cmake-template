@@ -1,0 +1,113 @@
+#! /bin/bash
+
+DOCKER_IMAGE=template:base
+
+VIM_PATH=$HOME/.vim
+GIT_PATH=$HOME/git
+SRC_PATH=$GIT_PATH/cmake-template
+CMAKE_PATH=$GIT_PATH/cmake
+BUILD_PATH=/tmp/tmpl/build
+INSTALL_PATH=/tmp/tmpl/install
+DOC_PATH=/tmp/tmpl/doc
+
+#remote paths
+C_VIM=/usr/share/vim
+
+mkdir -p -m 777 $BUILD_PATH
+mkdir -p -m 777 $INSTALL_PATH
+mkdir -p -m 777 $DOC_PATH
+
+cat << EOF > /tmp/vimrc
+runtime! archlinux.vim
+set nocompatible
+
+call plug#begin("/usr/share/vim/vimfiles/plugged")
+
+Plug 'kien/ctrlp.vim'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'keremc/asyncomplete-clang.vim'
+
+call plug#end()
+
+if executable('clangd')
+	augroup lsp_clangd
+		au User lsp_setup call lsp#register_server({
+					\ 'name': 'clangd',
+					\ 'cmd': {server_info->[
+					\ 'clangd',
+					\ '--compile-commands-dir=/build',
+					\ '--header-insertion=iwyu',
+					\ '--clang-tidy']},
+					\ 'whitelist': ['c', 'cpp', 'h', 'hpp']
+					\ })
+	augroup end
+endif
+
+so /usr/share/vim/vimfiles/vimrc
+
+function! s:on_lsp_buffer_enabled() abort
+	setlocal omnifunc=lsp#complete
+	setlocal signcolumn=yes
+	"setlocal signcolumn=number
+
+	let g:asyncomplete_auto_popup = 0
+
+	if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+	nmap <buffer> <leader>d <plug>(lsp-definition)
+	nmap <buffer> <leader>s <plug>(lsp-document-symbol-search)
+	nmap <buffer> <leader>S <plug>(lsp-workspace-symbol-search)
+	nmap <buffer> <leader>r <plug>(lsp-references)
+	nmap <buffer> <leader>t <plug>(lsp-type-definition)
+	nmap <buffer> <leader>rn <plug>(lsp-rename)
+	nmap <buffer> <leader>ti <plug>(lsp-hover)
+	nmap <buffer> <leader>ca <plug>(lsp-code-action)
+	nmap <buffer> [g <plug>(lsp-previous-diagnostic)
+	nmap <buffer> ]g <plug>(lsp-next-diagnostic)
+
+	function! s:check_back_space() abort
+		let col = col('.') - 1
+	   return !col || getline('.')[col - 1]  =~ '\s'
+	endfunction
+
+	inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : asyncomplete#force_refresh()
+	inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+	setlocal foldmethod=expr
+	  \ foldexpr=lsp#ui#vim#folding#foldexpr()
+	  \ foldtext=lsp#ui#vim#folding#foldtext()
+
+	let g:lsp_format_sync_timeout = 1000
+	autocmd! BufWritePre *.c,*.cpp,*.h,*.hpp call execute('LspDocumentFormat')
+endfunction
+
+augroup lsp_install
+	au!
+	autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup end
+
+EOF
+
+PARAMS=(
+	-e TERM=xterm-256color
+	-u $(id -u):$(id -g)
+	-w /src
+
+	-e DISPLAY
+	-v /tmp/.X11-unix:/tmp/.X11-unix:ro
+   -v $HOME/.Xauthority:/home/modeler/.Xauthority:ro
+
+	-v $CMAKE_PATH:/cmake
+	-v $SRC_PATH:/src
+	-v $BUILD_PATH:/build
+	-v $INSTALL_PATH:/install
+	-v $DOC_PATH:/doc
+
+	-v $VIM_PATH:$C_VIM/vimfiles
+	-v /tmp/vimrc:/etc/vimrc
+)
+
+docker run --rm -it ${PARAMS[@]} ${DOCKER_IMAGE} bash
+
+rm /tmp/vimrc

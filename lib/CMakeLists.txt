@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.16)
-
 project(${PROJECT_NAME}-lib VERSION 0.0.1.0 LANGUAGES CXX)
 
 include(GNUInstallDirs)
@@ -7,8 +5,8 @@ include(GenerateExportHeader)
 
 option(TMPL_LIB_BUILD_SHARED "Enable compilation of shared libraries" ${BUILD_SHARED_LIBS})
 option(TMPL_LIB_BUILD_TESTS "Build ${PROJECT_NAME} tests" ${TMPL_BUILD_TESTS})
-option(TMPL_LIB_BUILD_EXAMPLES "Build ${PROJECT_NAME} examples" ${TMPL_BUILD_EXAMPLE})
-option(TMPL_LIB_EXCLUDE_DEPRECATED "Exclude deprecated from ${PROJECT_NAME_UPPER}" ${TMPL_EXCLUDE_DEPRECATED})
+option(TMPL_LIB_BUILD_EXAMPLES "Build ${PROJECT_NAME} examples" ${TMPL_BUILD_EXAMPLES})
+option(TMPL_LIB_EXCLUDE_DEPRECATED "Exclude deprecated from ${PROJECT_NAME}" ${TMPL_EXCLUDE_DEPRECATED})
 
 set(OUTPUT_NAME tmpl)
 set(INCLUDE_DIR include/${OUTPUT_NAME})
@@ -87,7 +85,7 @@ install(DIRECTORY include/${OUTPUT_NAME}
 	COMPONENT ${PROJECT_NAME}_dev
 )
 install(FILES
-	${PROJECT_BINARY_DIR}/${OUTPUT_NAME}/${OUTPUT_NAME}_export.h
+	${PROJECT_BINARY_DIR}/${OUTPUT_NAME}/exports.hpp
 	${PROJECT_BINARY_DIR}/${OUTPUT_NAME}/version.hpp
 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${OUTPUT_NAME}
 	COMPONENT ${PROJECT_NAME}_dev

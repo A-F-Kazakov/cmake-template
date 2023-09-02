@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(${PROJECT_NAME}-app VERSION 0.0.1.0 LANGUAGES CXX)
+project(${PROJECT_NAME}-app VERSION 0.0.1 LANGUAGES CXX)
 
 include(GNUInstallDirs)
 

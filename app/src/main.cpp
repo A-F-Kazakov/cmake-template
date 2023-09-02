@@ -5,18 +5,16 @@
  * This file contains main function of application
  */
 
-#include <filesystem>
+#include <tmpl/example.hpp>
+
 #include <fstream>
 #include <iostream>
-
-#include <tmpl/example.hpp>
 
 using tmpl::example;
 
 int main()
 {
-	example e{"hello app"};
+	const example val{"hello app"};
 
-	std::cout << e << std::endl;
-	std::filesystem::path root{"refs"};
+	std::cout << val << std::endl;
 }

@@ -1,12 +1,10 @@
-#include<tmpl/example.hpp>
+#include <tmpl/example.hpp>
 
-#include<iostream>
-
-using LIB_NAMESPACE::example;
+#include <iostream>
 
 int main()
 {
-	example vl("Hello example");
+	const tmpl::example val("Hello example");
 
-	std::cout << vl;
+	std::cout << val << std::endl;
 }
