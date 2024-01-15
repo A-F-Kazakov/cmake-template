@@ -1,10 +1,15 @@
 #include <tmpl/example.hpp>
 
-#include <iostream>
+#include <sstream>
+#include <cassert>
 
 int main()
 {
-	const tmpl::example val("Hello example");
+	const std::string str{"Hello example"};
+	const tmpl::example val(str);
 
-	std::cout << val << std::endl;
+	std::stringstream ss;
+	ss << val;
+
+	assert(ss.str() == str);
 }

@@ -8,4 +8,8 @@ RUN pacman -Syu --noconfirm \
 	lldb			\
 	boost			\
 	boost-libs	\
-	vim 
+	vim			\
+	doxygen		\
+	graphviz		\
+	texlive		\
+	texlive-langcyrillic
