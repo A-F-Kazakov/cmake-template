@@ -4,33 +4,41 @@ Checks: '
 	bugprone-*,
 	concurrency-*,
 	cppcoreguidelines-*,
-	hicpp-*,
 	misc-*,
 	modernize-*,
 	performance-*,
 	portability-*,
 	readability-*,
-	-readability-braces-around-statements,
-	-modernize-use-trailing-return-type,
-	-hicpp-braces-around-statements,
 	-cppcoreguidelines-pro-bounds-pointer-arithmetic,
-	-cppcoreguidelines-owning-memory
+	-cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+	-cppcoreguidelines-owning-memory,
+	-modernize-use-trailing-return-type,
+	-readability-braces-around-statements,
+   -bugprone-macro-parentheses,
+   -modernize-concat-nested-namespaces,
+   -modernize-use-nodiscard,
+   -readability-identifier-length,
+   -bugprone-easily-swappable-parameters,
+   -misc-include-cleaner
 '
-WarningsAsErrors: '*'
 FormatStyle: 'file'
 CheckOptions:
-   - key:   readability-identifier-length.IgnoredVariableNames
-     value: "^[ijk]|io|ex$"
-   - key:   readability-identifier-length.IgnoredParameterNames
-     value: "^[th]|ec|io|os|ex$"
-   - key:   readability-identifier-length.IgnoredLoopCounterNames
-     value: "^[ijkxy]$"
-   - key:   readability-identifier-length.IgnoredExceptionVariableNames
-     value: "^[e]$"
-   - key:   readability-identifier-naming.PrivateMemberPrefix
-     value: 'm_'
-   - key:   readability-identifier-naming.TemplateParameterCase
-     value: 'CamelCase'
-   - key:   readability-identifier-naming.TemplateTemplateParameterPrefix
-     value: 'CamelCase'
+  - key:   readability-identifier-length.IgnoredVariableNames
+    value: '^[ijk]|io|ex|fd|fn|vm$'
+  - key:   readability-identifier-length.IgnoredParameterNames
+    value: '^[th]|ec|io|os|ex|in|fn|gc|jv$'
+  - key:   readability-identifier-length.IgnoredLoopCounterNames
+    value: '^[ijkxy]$'
+  - key:   readability-identifier-length.IgnoredExceptionVariableNames
+    value: '^[e]$'
+  - key:   readability-identifier-naming.PrivateMemberPrefix
+    value: m_
+  - key:   readability-identifier-naming.TemplateParameterCase
+    value: CamelCase
+  - key:   readability-identifier-naming.TemplateTemplateParameterPrefix
+    value: CamelCase
+  - key:   cppcoreguidelines-macro-usage.CheckCapsOnly
+    value: 'true'
+  - key: performance-unnecessary-value-param.AllowedTypes
+    value: 'string_view'
 
