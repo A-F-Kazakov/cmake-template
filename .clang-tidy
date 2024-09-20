@@ -9,24 +9,21 @@ Checks: '
 	performance-*,
 	portability-*,
 	readability-*,
-	-cppcoreguidelines-pro-bounds-pointer-arithmetic,
-	-cppcoreguidelines-pro-bounds-array-to-pointer-decay,
 	-cppcoreguidelines-owning-memory,
+	-cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+	-cppcoreguidelines-pro-bounds-pointer-arithmetic,
 	-modernize-use-trailing-return-type,
 	-readability-braces-around-statements,
-   -bugprone-macro-parentheses,
-   -modernize-concat-nested-namespaces,
-   -modernize-use-nodiscard,
-   -readability-identifier-length,
-   -bugprone-easily-swappable-parameters,
    -misc-include-cleaner
 '
+WarningsAsErrors: '*'
+HeaderFilterRegex: ''
 FormatStyle: 'file'
 CheckOptions:
   - key:   readability-identifier-length.IgnoredVariableNames
-    value: '^[ijk]|io|ex|fd|fn|vm$'
+    value: '^[ijk]|ec|io|ex|fd|fn|vm|id$'
   - key:   readability-identifier-length.IgnoredParameterNames
-    value: '^[th]|ec|io|os|ex|in|fn|gc|jv$'
+    value: '^[th]|ec|io|ex|fd|fn|vm|gc|jv|id|os$'
   - key:   readability-identifier-length.IgnoredLoopCounterNames
     value: '^[ijkxy]$'
   - key:   readability-identifier-length.IgnoredExceptionVariableNames
@@ -39,6 +36,13 @@ CheckOptions:
     value: CamelCase
   - key:   cppcoreguidelines-macro-usage.CheckCapsOnly
     value: 'true'
-  - key: performance-unnecessary-value-param.AllowedTypes
+  - key:	  performance-unnecessary-value-param.AllowedTypes
     value: 'string_view'
-
+  - key:   readability-identifier-naming.GlobalConstantPrefix
+    value: 'default_'
+  - key:   readability-identifier-naming.GlobalConstantPointerPrefix
+    value: 'g_'
+  - key:   readability-identifier-naming.GlobalPointerPrefix
+    value: 'g_'
+  - key:   readability-identifier-naming.GlobalVariablePrefix
+    value: 'g_'
