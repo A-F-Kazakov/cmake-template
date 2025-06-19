@@ -21,9 +21,9 @@ message(STATUS "Build type is: ${CMAKE_BUILD_TYPE}")
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-enable_testing()
+if(TMPL_BUILD_TESTS)
+	enable_testing()
+endif()
 
 add_subdirectory(lib)
 add_subdirectory(app)

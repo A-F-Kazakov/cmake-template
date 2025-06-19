@@ -8,7 +8,7 @@
 #ifndef TMPL_LIB_EXAMPLE_HPP
 #define TMPL_LIB_EXAMPLE_HPP
 
-#include <tmpl/tmpl.hpp>
+#include <tmpl/exports.hpp>
 #include <ostream>
 #include <string>
 
