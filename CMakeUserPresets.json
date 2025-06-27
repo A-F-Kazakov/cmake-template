@@ -1,0 +1,14 @@
+{
+	"version": 6,
+	"configurePresets": [
+		{
+			"name": "windows",
+			"condition": {
+				"lhs": "${hostSystemName}",
+				"type": "equals",
+				"rhs": "Windows"
+			},
+			"binaryDir": "${sourceDir}/_build/${hostSystemName}"
+		}
+	]
+}
